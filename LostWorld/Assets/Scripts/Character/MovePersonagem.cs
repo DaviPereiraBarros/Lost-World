@@ -8,6 +8,7 @@ public class MovePersonagem : MonoBehaviour
     private Vector2 direcao;
     public Animator anim; 
     private Rigidbody2D heroiRB;
+    public CircleCollider2D circle;
 
 
     void Start()
@@ -58,6 +59,14 @@ public class MovePersonagem : MonoBehaviour
         {
             direcao += Vector2.left;
         }
+        if(Input.GetKey(KeyCode.Space))
+        {
+            circle.enabled = false;
+        }
+        else
+        {
+            circle.enabled = true;
+        }
         
     }
 
@@ -66,6 +75,17 @@ public class MovePersonagem : MonoBehaviour
         anim.SetLayerWeight(1, 1);
         anim.SetFloat("x", dir.x);
         anim.SetFloat("y", dir.y);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.CompareTag("Inimigo")){
+            Debug.Log("Encostou");
+        }
+        if(Input.GetKey(KeyCode.Space)){
+            circle.isTrigger = true;
+        }
+        
     }
 
 }
