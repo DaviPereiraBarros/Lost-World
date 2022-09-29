@@ -5,11 +5,11 @@ using UnityEngine;
 public class MoveEnemy : MonoBehaviour
 {
     [SerializeField] private Transform target;
-    public float dist;
     public float speed;
     private Vector2 direcao;
     public Animator animEnemy; 
     private Rigidbody2D enemyRB;
+    private CircleCollider2D enemyCollider;
 
     void Start()
     {
@@ -36,30 +36,33 @@ public class MoveEnemy : MonoBehaviour
         float diferencaParaJogadorX = transform.position.x - target.transform.position.x; 
         float diferencaParaJogadorY = transform.position.y - target.transform.position.y;
 
-        if(diferencaParaJogadorX > 1)
-        {
-            direcao += Vector2.left;
-        }
-        if(diferencaParaJogadorX < -1)
-        {
-            direcao += Vector2.right;
-        }
-        if(diferencaParaJogadorY > 1)
-        {
-            direcao += Vector2.down;
-        }
-        if(diferencaParaJogadorY < -1)
-        {
-            direcao += Vector2.up;
-        }
-        
+            if(diferencaParaJogadorX > 0 && diferencaParaJogadorY > 0)
+            {
+                 direcao += Vector2.left;
+            }
+           
+            if(diferencaParaJogadorX < 0 && diferencaParaJogadorY > 0)
+            {
+                 direcao += Vector2.down;
+            } 
+             
+            if(diferencaParaJogadorX < 0 && diferencaParaJogadorY < 0)
+            {
+                direcao += Vector2.right;
+            }
+           
+            if(diferencaParaJogadorX > 0 && diferencaParaJogadorY < 0)
+            {
+                direcao += Vector2.up;
+            } 
+           
     }
 
     void Follow()
     {
         float distancia = Vector2.Distance(transform.position, target.position);
 
-        if(distancia > dist)
+        if(distancia > 0)
         {
             transform.position = Vector2.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
             Detect();
@@ -67,11 +70,11 @@ public class MoveEnemy : MonoBehaviour
 
         if(distancia < 1.5f)
         {
-            animEnemy.SetBool("Attack", true);
+            animEnemy.SetBool("Ataque", true);
         }
         else
         {
-            animEnemy.SetBool("Attack", false);
+            animEnemy.SetBool("Ataque", false);
             
         }
 
@@ -81,5 +84,14 @@ public class MoveEnemy : MonoBehaviour
     {
         animEnemy.SetFloat("x", dir.x);
         animEnemy.SetFloat("y", dir.y);
+    }
+    
+    private void OnMouseEnter()
+    {
+        AttkCharacter.instance.Target();
+    }
+    private void OnMouseExit()
+    {
+        AttkCharacter.instance.OutOfSight();
     }
 }
